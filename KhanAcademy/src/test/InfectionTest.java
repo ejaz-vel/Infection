@@ -13,7 +13,7 @@ import org.junit.Test;
 import code.Infection;
 import code.KAUser;
 
-public class TotalInfection {
+public class InfectionTest {
 	
 	List<KAUser> users = new ArrayList<>();
 
@@ -72,13 +72,65 @@ public class TotalInfection {
 	public void test2() {
 		Infection newFeature = new Infection();
 		
-		// Get the list of infected users for user3
+		// Get the list of infected users for user1
 		Set<KAUser> actual = newFeature.getTotalInfectedUsers(users.get(0));
 		Set<KAUser> expected = new HashSet<>();
 		expected.add(users.get(0));
 		expected.add(users.get(6));
 		expected.add(users.get(5));
 		expected.add(users.get(7));
+		assertEquals(expected, actual);
+	}
+	
+	@Test
+	public void test3() {
+		Infection newFeature = new Infection();
+		
+		// Get the list of infected users for user1
+		Set<KAUser> actual = newFeature.getLimitedInfectedUsers(users.get(0), 1);
+		Set<KAUser> expected = new HashSet<>();
+		expected.add(users.get(0));
+		expected.add(users.get(6));
+		assertEquals(expected, actual);
+	}
+	
+	@Test
+	public void test4() {
+		Infection newFeature = new Infection();
+		
+		// Get the list of infected users for user3
+		Set<KAUser> actual = newFeature.getLimitedInfectedUsers(users.get(2), 1);
+		Set<KAUser> expected = new HashSet<>();
+		expected.add(users.get(2));
+		expected.add(users.get(3));
+		expected.add(users.get(4));
+		expected.add(users.get(9));
+		assertEquals(expected, actual);
+	}
+	
+	@Test
+	public void test5() {
+		Infection newFeature = new Infection();
+		
+		// Get the list of infected users for user3
+		Set<KAUser> actual = newFeature.getLimitedInfectedUsers(users.get(2), 0);
+		Set<KAUser> expected = new HashSet<>();
+		expected.add(users.get(2));
+		assertEquals(expected, actual);
+	}
+	
+	@Test
+	public void test6() {
+		Infection newFeature = new Infection();
+		
+		// Get the list of infected users for user3
+		Set<KAUser> actual = newFeature.getLimitedInfectedUsers(users.get(2), 2);
+		Set<KAUser> expected = new HashSet<>();
+		expected.add(users.get(1));
+		expected.add(users.get(2));
+		expected.add(users.get(3));
+		expected.add(users.get(4));
+		expected.add(users.get(9));
 		assertEquals(expected, actual);
 	}
 

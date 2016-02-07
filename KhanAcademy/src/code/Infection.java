@@ -36,8 +36,27 @@ public class Infection {
 	 * @param levelLimit: The restriction on the number of levels in the user hierarchy affected by the infection
 	 * @return list of infected Khan Academy Users
 	 */
-	public List<KAUser> getLimitedInfectedUsers(KAUser origin, int levelLimit) {
-		List<KAUser> infectedUsers = new ArrayList<>();
+	public Set<KAUser> getLimitedInfectedUsers(KAUser origin, int levelLimit) {
+		Set<KAUser> infectedUsers = new HashSet<>();
+		Queue<Pair<KAUser, Integer>> que = new LinkedList<>();
+		que.add(new Pair<KAUser, Integer>(origin, 0));
+		while (!que.isEmpty()) {
+			Pair<KAUser, Integer> user = que.poll();
+			List<KAUser> dependents = user.getLeft().getDependents();
+			Integer level = user.getRight();
+			
+			if (level > levelLimit) {
+				break;
+			}
+			
+			for (KAUser dependent: dependents) {
+				if (!dependent.isInfected()) {
+					que.add(new Pair<KAUser, Integer>(dependent, level + 1));
+				}
+			}
+			user.getLeft().infect();
+			infectedUsers.add(user.getLeft());
+		}
 		return infectedUsers;
 	}
 	
