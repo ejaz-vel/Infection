@@ -133,5 +133,57 @@ public class InfectionTest {
 		expected.add(users.get(9));
 		assertEquals(expected, actual);
 	}
+	
+	@Test
+	public void test7() {
+		Infection newFeature = new Infection();
+		
+		// Get the list of infected users for user3
+		Set<KAUser> actual = newFeature.getLimitedInfectedUsersWithLimit(users.get(2), 2);
+		Set<KAUser> expected = new HashSet<>();
+		expected.add(users.get(2));
+		expected.add(users.get(3));
+		expected.add(users.get(4));
+		expected.add(users.get(9));
+		assertEquals(expected, actual);
+	}
+	
+	@Test
+	public void test8() {
+		Infection newFeature = new Infection();
+		
+		// Get the list of infected users for user3
+		Set<KAUser> actual = newFeature.getLimitedInfectedUsersWithLimit(users.get(2), 4);
+		Set<KAUser> expected = new HashSet<>();
+		expected.add(users.get(2));
+		expected.add(users.get(3));
+		expected.add(users.get(4));
+		expected.add(users.get(9));
+		assertEquals(expected, actual);
+	}
+	
+	@Test
+	public void test9() {
+		Infection newFeature = new Infection();
+		
+		// Get the list of infected users for user3
+		Set<KAUser> actual = newFeature.getLimitedInfectedUsersWithLimit(users.get(1), 1);
+		Set<KAUser> expected = new HashSet<>();
+		expected.add(users.get(1));
+		assertEquals(expected, actual);
+	}
+	
+	@Test
+	public void test10() {
+		Infection newFeature = new Infection();
+		
+		// Get the list of infected users for user3
+		Set<KAUser> actual = newFeature.getLimitedInfectedUsersWithLimit(users.get(1), 2);
+		Set<KAUser> expected = new HashSet<>();
+		expected.add(users.get(1));
+		expected.add(users.get(3));
+		expected.add(users.get(8));
+		assertEquals(expected, actual);
+	}
 
 }

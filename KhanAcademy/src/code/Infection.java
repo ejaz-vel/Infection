@@ -1,5 +1,4 @@
 package code;
-import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
@@ -66,8 +65,35 @@ public class Infection {
 	 * @param userlimit: The restriction on the number of users infected
 	 * @return list of infected Khan Academy Users
 	 */
-	public List<KAUser> getLimitedInfectedUsersWithLimit(KAUser origin, int userlimit) {
-		List<KAUser> infectedUsers = new ArrayList<>();
+	public Set<KAUser> getLimitedInfectedUsersWithLimit(KAUser origin, int userlimit) {
+		Set<KAUser> infectedUsers = new HashSet<>();
+		Queue<Pair<KAUser, Integer>> que = new LinkedList<>();
+		que.add(new Pair<KAUser, Integer>(origin, 0));
+		int userCount = 0;
+		int levelToBeCompleted = 0;
+		while (!que.isEmpty()) {
+			Pair<KAUser, Integer> user = que.poll();
+			List<KAUser> dependents = user.getLeft().getDependents();
+			Integer level = user.getRight();
+			
+			if (userCount >= userlimit) {
+				// It does not make sense to have some users in a class to have different experience.
+				// Make sure that all KAUsers with thin the same level (i.e. students taught by the same coach) have the same user experience
+				if (level > levelToBeCompleted) {
+					break;
+				}
+			}
+			
+			for (KAUser dependent: dependents) {
+				if (!dependent.isInfected()) {
+					que.add(new Pair<KAUser, Integer>(dependent, level + 1));
+				}
+			}
+			user.getLeft().infect();
+			infectedUsers.add(user.getLeft());
+			userCount++;
+			levelToBeCompleted = level;
+		}
 		return infectedUsers;
 	}
 	
