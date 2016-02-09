@@ -48,11 +48,7 @@ public class Infection {
 				break;
 			}
 			
-			for (KAUser dependent: dependents) {
-				if (!dependent.isInfected()) {
-					que.add(new Pair<KAUser, Integer>(dependent, level + 1));
-				}
-			}
+			addDependentsToQueue(dependents, que, level);
 			user.getLeft().infect();
 			infectedUsers.add(user.getLeft());
 		}
@@ -60,12 +56,12 @@ public class Infection {
 	}
 	
 	/**
-	 * Return the list of users infected by the new feature. The infection is restricted to fixed number of users
+	 * Return the list of users infected by the new feature. The infection is needs to infect a fixed number of users
 	 * @param origin: The Khan Academy user who is the origin of the infection
-	 * @param userlimit: The restriction on the number of users infected
+	 * @param userlimit: The restriction on the number of users infected. This provides the Lower Bound on the number of users
 	 * @return list of infected Khan Academy Users
 	 */
-	public Set<KAUser> getLimitedInfectedUsersWithLimit(KAUser origin, int userlimit) {
+	public Set<KAUser> getLimitedInfectedUsersWithLowerLimit(KAUser origin, int userlimit) {
 		Set<KAUser> infectedUsers = new HashSet<>();
 		Queue<Pair<KAUser, Integer>> que = new LinkedList<>();
 		que.add(new Pair<KAUser, Integer>(origin, 0));
@@ -84,17 +80,55 @@ public class Infection {
 				}
 			}
 			
-			for (KAUser dependent: dependents) {
-				if (!dependent.isInfected()) {
-					que.add(new Pair<KAUser, Integer>(dependent, level + 1));
-				}
-			}
+			addDependentsToQueue(dependents, que, level);
 			user.getLeft().infect();
 			infectedUsers.add(user.getLeft());
+			
 			userCount++;
 			levelToBeCompleted = level;
 		}
 		return infectedUsers;
+	}
+	
+	/**
+	 * Return the list of users infected by the new feature. The infection can affect maximum a given number of users
+	 * @param origin: The Khan Academy user who is the origin of the infection
+	 * @param userlimit: The restriction on the number of users infected. This provides the Upper Bound on the number of users
+	 * @return list of infected Khan Academy Users
+	 */
+	public Set<KAUser> getLimitedInfectedUsersWithMaxLimit(KAUser origin, int userlimit) {
+		Set<KAUser> infectedUsers = new HashSet<>();
+		Set<KAUser> tempUsers = new HashSet<>();
+		Queue<Pair<KAUser, Integer>> que = new LinkedList<>();
+		que.add(new Pair<KAUser, Integer>(origin, 0));
+		int userCount = 0;
+		int levelToBeCompleted = 0;
+		while (!que.isEmpty() && userCount < userlimit) {
+			Pair<KAUser, Integer> user = que.poll();
+			List<KAUser> dependents = user.getLeft().getDependents();
+			Integer level = user.getRight();
+			
+			if (level > levelToBeCompleted) {
+				infectedUsers.addAll(tempUsers);
+				tempUsers.clear();
+			}
+			
+			addDependentsToQueue(dependents, que, level);
+			user.getLeft().infect();
+			tempUsers.add(user.getLeft());
+			
+			userCount++;
+			levelToBeCompleted = level;
+		}
+		return infectedUsers;
+	}
+	
+	private void addDependentsToQueue(List<KAUser> dependents, Queue<Pair<KAUser, Integer>> que, int currentLevel) {
+		for (KAUser dependent: dependents) {
+			if (!dependent.isInfected()) {
+				que.add(new Pair<KAUser, Integer>(dependent, currentLevel + 1));
+			}
+		}
 	}
 	
 }
