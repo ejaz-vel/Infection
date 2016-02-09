@@ -53,7 +53,7 @@ public class InfectionTest {
 	}
 	
 	@Test
-	public void test1() {
+	public void testTotalInfection() {
 		Infection newFeature = new Infection();
 		
 		// Get the list of infected users for user3
@@ -69,7 +69,7 @@ public class InfectionTest {
 	}
 	
 	@Test
-	public void test2() {
+	public void testTotalInfectionCornerCase() {
 		Infection newFeature = new Infection();
 		
 		// Get the list of infected users for user1
@@ -83,115 +83,174 @@ public class InfectionTest {
 	}
 	
 	@Test
-	public void test3() {
+	public void testLimitedInfectionWithLevels1() {
 		Infection newFeature = new Infection();
 		
 		// Get the list of infected users for user1
-		Set<KAUser> actual = newFeature.getLimitedInfectedUsers(users.get(0), 1);
-		Set<KAUser> expected = new HashSet<>();
-		expected.add(users.get(0));
-		expected.add(users.get(6));
-		assertEquals(expected, actual);
+		try {
+			Set<KAUser> actual = newFeature.getLimitedInfectedUsers(users.get(0), 1);
+			Set<KAUser> expected = new HashSet<>();
+			expected.add(users.get(0));
+			expected.add(users.get(6));
+			assertEquals(expected, actual);
+		} catch(Exception e) {
+			fail("Exception Thrown: " + e.getMessage());
+		}
+		
 	}
 	
 	@Test
-	public void test4() {
+	public void testLimitedInfectionWithLevels2() {
 		Infection newFeature = new Infection();
 		
 		// Get the list of infected users for user3
-		Set<KAUser> actual = newFeature.getLimitedInfectedUsers(users.get(2), 1);
-		Set<KAUser> expected = new HashSet<>();
-		expected.add(users.get(2));
-		expected.add(users.get(3));
-		expected.add(users.get(4));
-		expected.add(users.get(9));
-		assertEquals(expected, actual);
+		try {
+			Set<KAUser> actual = newFeature.getLimitedInfectedUsers(users.get(2), 1);
+			Set<KAUser> expected = new HashSet<>();
+			expected.add(users.get(2));
+			expected.add(users.get(3));
+			expected.add(users.get(4));
+			expected.add(users.get(9));
+			assertEquals(expected, actual);
+		} catch (Exception e) {
+			fail("Exception Thrown: " + e.getMessage());
+		}
 	}
 	
 	@Test
-	public void test5() {
+	public void testLimitedInfectionWithLevels3() {
 		Infection newFeature = new Infection();
 		
 		// Get the list of infected users for user3
-		Set<KAUser> actual = newFeature.getLimitedInfectedUsers(users.get(2), 0);
-		Set<KAUser> expected = new HashSet<>();
-		expected.add(users.get(2));
+		try {
+			Set<KAUser> actual = newFeature.getLimitedInfectedUsers(users.get(2), 2);
+			Set<KAUser> expected = new HashSet<>();
+			expected.add(users.get(1));
+			expected.add(users.get(2));
+			expected.add(users.get(3));
+			expected.add(users.get(4));
+			expected.add(users.get(9));
 		assertEquals(expected, actual);
+		} catch (Exception e) {
+			fail("Exception Thrown: " + e.getMessage());
+		}
 	}
 	
 	@Test
-	public void test6() {
+	public void testLimitedInfectionWithLevelsCornerCase() {
 		Infection newFeature = new Infection();
 		
 		// Get the list of infected users for user3
-		Set<KAUser> actual = newFeature.getLimitedInfectedUsers(users.get(2), 2);
-		Set<KAUser> expected = new HashSet<>();
-		expected.add(users.get(1));
-		expected.add(users.get(2));
-		expected.add(users.get(3));
-		expected.add(users.get(4));
-		expected.add(users.get(9));
-		assertEquals(expected, actual);
+		try {
+			Set<KAUser> actual = newFeature.getLimitedInfectedUsers(users.get(2), 0);
+			Set<KAUser> expected = new HashSet<>();
+			expected.add(users.get(2));
+			assertEquals(expected, actual);
+		} catch (Exception e) {
+			fail("Exception Thrown: " + e.getMessage());
+		}
 	}
 	
 	@Test
-	public void test7() {
+	public void testLimitedInfectionWithLevelsException() {
 		Infection newFeature = new Infection();
 		
 		// Get the list of infected users for user3
-		Set<KAUser> actual = newFeature.getLimitedInfectedUsersWithLowerLimit(users.get(2), 2);
-		Set<KAUser> expected = new HashSet<>();
-		expected.add(users.get(2));
-		expected.add(users.get(3));
-		expected.add(users.get(4));
-		expected.add(users.get(9));
-		assertEquals(expected, actual);
+		try {
+			Set<KAUser> actual = newFeature.getLimitedInfectedUsers(users.get(2), 5);
+			fail("Exception should be Thrown");
+		} catch (Exception e) {
+			assertTrue(true);
+		}
 	}
 	
 	@Test
-	public void test8() {
+	public void testLimitedInfectionWithMinUsers1() {
 		Infection newFeature = new Infection();
 		
 		// Get the list of infected users for user3
-		Set<KAUser> actual = newFeature.getLimitedInfectedUsersWithLowerLimit(users.get(2), 4);
-		Set<KAUser> expected = new HashSet<>();
-		expected.add(users.get(2));
-		expected.add(users.get(3));
-		expected.add(users.get(4));
-		expected.add(users.get(9));
-		assertEquals(expected, actual);
+		try {
+			Set<KAUser> actual = newFeature.getLimitedInfectedUsersWithMinUserLimit(users.get(2), 2);
+			Set<KAUser> expected = new HashSet<>();
+			expected.add(users.get(2));
+			expected.add(users.get(3));
+			expected.add(users.get(4));
+			expected.add(users.get(9));
+			assertEquals(expected, actual);
+		} catch (Exception e) {
+			fail("Exception Thrown: " + e.getMessage());
+		}
 	}
 	
 	@Test
-	public void test9() {
+	public void testLimitedInfectionWithMinUsers2() {
 		Infection newFeature = new Infection();
 		
 		// Get the list of infected users for user3
-		Set<KAUser> actual = newFeature.getLimitedInfectedUsersWithLowerLimit(users.get(1), 1);
-		Set<KAUser> expected = new HashSet<>();
-		expected.add(users.get(1));
-		assertEquals(expected, actual);
+		try {
+			Set<KAUser> actual = newFeature.getLimitedInfectedUsersWithMinUserLimit(users.get(2), 4);
+			Set<KAUser> expected = new HashSet<>();
+			expected.add(users.get(2));
+			expected.add(users.get(3));
+			expected.add(users.get(4));
+			expected.add(users.get(9));
+			assertEquals(expected, actual);
+		} catch (Exception e) {
+			fail("Exception Thrown: " + e.getMessage());
+		}
 	}
 	
 	@Test
-	public void test10() {
+	public void testLimitedInfectionWithMinUsers3() {
 		Infection newFeature = new Infection();
 		
 		// Get the list of infected users for user3
-		Set<KAUser> actual = newFeature.getLimitedInfectedUsersWithLowerLimit(users.get(1), 2);
-		Set<KAUser> expected = new HashSet<>();
-		expected.add(users.get(1));
-		expected.add(users.get(3));
-		expected.add(users.get(8));
-		assertEquals(expected, actual);
+		try {
+			Set<KAUser> actual = newFeature.getLimitedInfectedUsersWithMinUserLimit(users.get(1), 1);
+			Set<KAUser> expected = new HashSet<>();
+			expected.add(users.get(1));
+			assertEquals(expected, actual);
+		} catch (Exception e) {
+			fail("Exception Thrown: " + e.getMessage());
+		}
 	}
 	
 	@Test
-	public void test11() {
+	public void testLimitedInfectionWithMinUsers4() {
 		Infection newFeature = new Infection();
 		
 		// Get the list of infected users for user3
-		Set<KAUser> actual = newFeature.getLimitedInfectedUsersWithMaxLimit(users.get(1), 2);
+		try {
+			Set<KAUser> actual = newFeature.getLimitedInfectedUsersWithMinUserLimit(users.get(1), 2);
+			Set<KAUser> expected = new HashSet<>();
+			expected.add(users.get(1));
+			expected.add(users.get(3));
+			expected.add(users.get(8));
+			assertEquals(expected, actual);
+		} catch (Exception e) {
+			fail("Exception Thrown: " + e.getMessage());
+		}
+	}
+	
+	@Test
+	public void testLimitedInfectionWithMinUsersException() {
+		Infection newFeature = new Infection();
+		
+		// Get the list of infected users for user3
+		try {
+			Set<KAUser> actual = newFeature.getLimitedInfectedUsersWithMinUserLimit(users.get(1), 10);
+			fail("Exception should be Thrown");
+		} catch (Exception e) {
+			assertTrue(true);
+		}
+	}
+	
+	@Test
+	public void testLimitedInfectionWithMaxUsers() {
+		Infection newFeature = new Infection();
+		
+		// Get the list of infected users for user3
+		Set<KAUser> actual = newFeature.getLimitedInfectedUsersWithMaxUserLimit(users.get(1), 2);
 		Set<KAUser> expected = new HashSet<>();
 		expected.add(users.get(1));
 		assertEquals(expected, actual);

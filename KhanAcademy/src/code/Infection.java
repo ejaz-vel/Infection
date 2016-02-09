@@ -8,7 +8,7 @@ import java.util.Set;
 public class Infection {
 	
 	/**
-	 * Return the entire list of users infected by the new feature.
+	 * Return the entire list of users infected by the new feature. This implements the total infection functionality.
 	 * @param origin The Khan Academy user who is the origin of the infection
 	 * @return list of infected Khan Academy Users
 	 */
@@ -34,15 +34,17 @@ public class Infection {
 	 * @param origin: The Khan Academy user who is the origin of the infection
 	 * @param levelLimit: The restriction on the number of levels in the user hierarchy affected by the infection
 	 * @return list of infected Khan Academy Users
+	 * @throws Exception 
 	 */
-	public Set<KAUser> getLimitedInfectedUsers(KAUser origin, int levelLimit) {
+	public Set<KAUser> getLimitedInfectedUsers(KAUser origin, int levelLimit) throws Exception {
 		Set<KAUser> infectedUsers = new HashSet<>();
 		Queue<Pair<KAUser, Integer>> que = new LinkedList<>();
 		que.add(new Pair<KAUser, Integer>(origin, 0));
+		Integer level = 0;
 		while (!que.isEmpty()) {
 			Pair<KAUser, Integer> user = que.poll();
 			List<KAUser> dependents = user.getLeft().getDependents();
-			Integer level = user.getRight();
+			level = user.getRight();
 			
 			if (level > levelLimit) {
 				break;
@@ -52,16 +54,21 @@ public class Infection {
 			user.getLeft().infect();
 			infectedUsers.add(user.getLeft());
 		}
+		
+		if (level <= levelLimit) {
+			throw new Exception("Not possible to infect " + levelLimit + " levels");
+		}
 		return infectedUsers;
 	}
 	
 	/**
-	 * Return the list of users infected by the new feature. The infection is needs to infect a fixed number of users
+	 * Return the list of users infected by the new feature. The infection is needs to infect a minimum number of users
 	 * @param origin: The Khan Academy user who is the origin of the infection
 	 * @param userlimit: The restriction on the number of users infected. This provides the Lower Bound on the number of users
 	 * @return list of infected Khan Academy Users
+	 * @throws Exception 
 	 */
-	public Set<KAUser> getLimitedInfectedUsersWithLowerLimit(KAUser origin, int userlimit) {
+	public Set<KAUser> getLimitedInfectedUsersWithMinUserLimit(KAUser origin, int userlimit) throws Exception {
 		Set<KAUser> infectedUsers = new HashSet<>();
 		Queue<Pair<KAUser, Integer>> que = new LinkedList<>();
 		que.add(new Pair<KAUser, Integer>(origin, 0));
@@ -87,6 +94,10 @@ public class Infection {
 			userCount++;
 			levelToBeCompleted = level;
 		}
+		
+		if (userCount < userlimit) {
+			throw new Exception("Not possible to infect " + userCount + " users");
+		}
 		return infectedUsers;
 	}
 	
@@ -96,7 +107,7 @@ public class Infection {
 	 * @param userlimit: The restriction on the number of users infected. This provides the Upper Bound on the number of users
 	 * @return list of infected Khan Academy Users
 	 */
-	public Set<KAUser> getLimitedInfectedUsersWithMaxLimit(KAUser origin, int userlimit) {
+	public Set<KAUser> getLimitedInfectedUsersWithMaxUserLimit(KAUser origin, int userlimit) {
 		Set<KAUser> infectedUsers = new HashSet<>();
 		Set<KAUser> tempUsers = new HashSet<>();
 		Queue<Pair<KAUser, Integer>> que = new LinkedList<>();
